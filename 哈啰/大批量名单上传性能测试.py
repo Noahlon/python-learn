@@ -6,7 +6,7 @@ import random
 
 
 url = "https://fat-rabbit.hellobike.cn/api/rpc/method/invoke"
-模版id = "7323053221296454511"
+模版id = "7324573985469570622"
 # 生成 rosterList 的示例数据
 # 生成随机电话号码
 def generate_phone_number():
@@ -108,8 +108,8 @@ def stress_test():
         
 if __name__ == "__main__":
  
-    uploadListThread(30)  # 3000为单位
-    
+    # uploadListThread(30)  # 3000为单位
+    uploadList(300)  
     # 等待上传完成
     
 
