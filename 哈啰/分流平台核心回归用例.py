@@ -1,16 +1,13 @@
 from time import sleep
 import requests
 import json
-import getToken as gt
 
-token = gt.gettoken()
-print("获取的token:", token)
 
 # 公共参数
 common_params = {
-    "token": "bearer_73bc0024-c0d0-4aab-b91c-b5e20297f3c6",
+    "token": "bearer_b314c6e5-c1b7-48bb-8146-127bccce3830",
     "url": "https://fat-bff-admin.hellobike.cn/general/bffGeneralReqLogin", 
-    "planName": "分流计划核心用例测试001",
+    "planName": "测试重试上传名单功能离线下发",
     "tenantCode": 11626,
     "tenantName": "分流平台-开放平台租户"
 }
@@ -21,13 +18,13 @@ def get_common_params():
 
 
 # 分流计划创建
-def create_distribution_plan():
+def create_distribution_plan(distributeType=1):
     common_params = get_common_params()
     payload = {
     "bffAction": "plan.create",
     "tenantCode": common_params["tenantCode"],
     "tenantName": common_params["tenantName"],
-    "distributeType": 1,
+    "distributeType": distributeType,
     "distributeRuleList": [
         {
             "channelId": 1,
@@ -45,7 +42,7 @@ def create_distribution_plan():
     }
     response = requests.post(common_params["url"], headers=headers, json=payload)
     if response.status_code == 200:
-        print("分流计划创建成功:", response.json())
+        print("分流计划创建成功:",common_params["planName"], response.json())
         # 返回id
         return response.json()["data"]
     else:
@@ -76,13 +73,13 @@ def query_distribution_plan(id):
 
 
 # 修改分流计划
-def update_distribution_plan(id):
+def update_distribution_plan(distributeType):
     common_params = get_common_params()
     payload = {
     "bffAction": "plan.edit",
     "tenantCode": 11629,
     "tenantName": "testnoah",
-    "distributeType": 1,
+    "distributeType": distributeType,
     "distributeRuleList": [
         {
             "channelId": 1,
@@ -155,25 +152,108 @@ def upload_roster(id):
     else:
         print("名单上传失败:", response.status_code, response.json())
 
+# 上传名单md5
+def upload_roster_md5(id):
+    url = "https://fat-rabbit.hellobike.cn/api/rpc/method/invoke"
 
+    payload = json.dumps({
+    "loginUser": {
+        "guid": "7e174c6e3130487abd93a6b30576b5bc",
+        "realName": "刘乾龙",
+        "email": "liuqianlongwb728@hellobike.com"
+    },
+    "appId": "AppHelloBussinessPortalService",
+    "iface": "com.hellobike.business.portal.api.serivce.distribute.DistService",
+    "method": "importRoster",
+    "soaHeaders": {},
+    "param": {
+        "rosterList": [
+        {
+            "phone": "fd2c581add1dad025a3013c4b087bfa9",
+            "variableInfos": {
+            "k1": "v1",
+            "k2": "v2"
+            },
+            "name": "刘乾龙",
+            "dataIdentifier": "1323434343434"
+        },
+        {
+            "phone": "9dcfb3fa4d4fcac026e19504bfab1806",
+            "variableInfos": {
+            "k1": "v1",
+            "k2": "v2"
+            },
+            "name": "张三",
+            "dataIdentifier": "1323434343435"
+        }
+        ],
+        "rosterType": 2,
+        "appKey": "caoweicode-WWmJQ8Tb",
+        "taskId": id
+    }
+    })
+    headers = {
+    'Content-Type': 'application/json'
+    }
+  
+    response = requests.post(url, headers=headers, data=payload)
+    if response.status_code == 200:
+        print("名单上传成功:", response.json())
+    else:
+        print("名单上传失败:", response.status_code, response.json())
 
-    
-if __name__ == "__main__":
-    是否测试修改 = 0 # 0表示不测试修改，1表示测试修改
-    id = create_distribution_plan()
+# 离线分流
+def offline_distribution():
+    # 设置分流名称
+    common_params["planName"] = "离线分流测试"
+    id = create_distribution_plan(2)
     print("分流计划ID:", id)
     sleep(5)  # 等待5秒钟，确保分流计划创建完成
     upload_roster(id)
     query_distribution_plan(id)
+
+# 实时分流
+def real_time_distribution():
+    # 设置分流名称
+    common_params["planName"] = "实时分流测试"
+    id = create_distribution_plan(1)
+    print("分流计划ID:", id)
+    sleep(5)  # 等待5秒钟，确保分流计划创建完成
+    upload_roster(id)
+    query_distribution_plan(id)
+
+# 实时分流-md5
+def real_time_distribution_md5():
+    # 设置分流名称
+    common_params["planName"] = "实时分流测试-md5"
+    id = create_distribution_plan(1)
+    print("分流计划ID:", id)
+    sleep(5)  # 等待5秒钟，确保分流计划创建完成
+    upload_roster_md5(id)
+    query_distribution_plan(id)
+
+
+
+# 离线分流-md5
+def offline_distribution_md5():
+    # 设置分流名称
+    common_params["planName"] = "离线分流测试-md5"
+    id = create_distribution_plan(2)
+    
+    sleep(5)  # 等待5秒钟，确保分流计划创建完成
+    upload_roster_md5(id)
+    query_distribution_plan(id)
+    
+if __name__ == "__main__":
+    offline_distribution()  # 离线分流
+    real_time_distribution()  # 实时分流
+    real_time_distribution_md5()  # 实时分流-md5
+    offline_distribution_md5()  # 离线分流-md5
+
+
     
     
+
     
-    if(是否测试修改):
-        update_distribution_plan(id)
-        sleep(5)  # 等待5秒钟，确保分流计划创建完成
-        upload_roster(id)
-    
-    
-    # update_distribution_plan()
     
     

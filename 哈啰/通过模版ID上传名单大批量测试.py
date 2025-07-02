@@ -92,8 +92,8 @@ def test_data_generation():
     
 
 if __name__ == "__main__":
-    planTemplateId = "7324341455939593462"  # 模版id
-    nums = 100  # 上传名单数量
-    # upload_roster(planTemplateId, nums)  # 上传名单
+    planTemplateId = "7324546229243152162"  # 模版id
+    nums = 300  # 上传名单数量
+    upload_roster(planTemplateId, nums)  # 上传名单
     # 批量上传
-    uploadListThread(planTemplateId, 1000)  # 多线程上传名单
+    # uploadListThread(planTemplateId, 1000)  # 多线程上传名单
