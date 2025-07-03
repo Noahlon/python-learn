@@ -9,7 +9,9 @@ common_params = {
     "url": "https://fat-bff-admin.hellobike.cn/general/bffGeneralReqLogin", 
     "planName": "测试重试上传名单功能离线下发",
     "tenantCode": 11626,
-    "tenantName": "分流平台-开放平台租户"
+    "tenantName": "分流平台-开放平台租户",
+    "appKey": "caoweicode-WWmJQ8Tb"
+    
 }
 
 # 获取公共参数函数
@@ -34,7 +36,7 @@ def create_distribution_plan(distributeType=1):
             "taskTemplateName": "分流平台测试发送长短信"
         }
     ],
-    "distributePlanName": common_params["planName"]
+    "distributePlanName": "TEST-" + common_params["planName"]
     }
     headers = {
         'Content-Type': 'application/json',
@@ -155,6 +157,7 @@ def upload_roster(id):
 # 上传名单md5
 def upload_roster_md5(id):
     url = "https://fat-rabbit.hellobike.cn/api/rpc/method/invoke"
+    params = get_common_params()
 
     payload = json.dumps({
     "loginUser": {
@@ -188,7 +191,7 @@ def upload_roster_md5(id):
         }
         ],
         "rosterType": 2,
-        "appKey": "caoweicode-WWmJQ8Tb",
+        "appKey": params["appKey"],
         "taskId": id
     }
     })
@@ -243,12 +246,54 @@ def offline_distribution_md5():
     sleep(5)  # 等待5秒钟，确保分流计划创建完成
     upload_roster_md5(id)
     query_distribution_plan(id)
-    
+
+# 创建分流模版
+def create_distribution_template():
+    common_params = get_common_params()
+    common_params = get_common_params()
+    payload = {
+    "bffAction": "plan.template.create",
+    "tenantCode": 11626,
+    "tenantName": "分流平台-开放平台租户",
+    "distributeType": 1,
+    "distributeRuleList": [
+        {
+            "channelId": 1,
+            "channelName": "哈啰AI外呼",
+            "percentage": 100,
+            "taskTemplateId": "6506453281338818692",
+            "taskTemplateName": "假呼叫测试副本副本",
+            "taskNameDefModel": 3,
+            "custTaskNamePart": "分流模版测试"z``
+        }
+    ],
+    "autoSubpackage": 1,
+    "subpackageThreshold": 55,
+    "templateName": "TEST-创建分流模版测试"
+    }
+    headers = {
+        'Content-Type': 'application/json',
+        'token': common_params["token"] # 使用公共参数中的token
+    }
+    response = requests.post(common_params["url"], headers=headers, json=payload)
+    if response.status_code == 200: 
+        print("模版创建成功:", response.json())
+    else:
+        print("模版创建失败:", response.status_code, response.json())
+
 if __name__ == "__main__":
-    offline_distribution()  # 离线分流
-    real_time_distribution()  # 实时分流
-    real_time_distribution_md5()  # 实时分流-md5
-    offline_distribution_md5()  # 离线分流-md5
+    
+    
+    # 创建分流模版
+    create_distribution_template()  # 创建分流模版
+    
+    是否测试主流程 = False
+    if 是否测试主流程:
+        offline_distribution()  # 离线分流
+        real_time_distribution()  # 实时分流
+        real_time_distribution_md5()  # 实时分流-md5
+        offline_distribution_md5()  # 离线分流-md5
+        
 
 
     
