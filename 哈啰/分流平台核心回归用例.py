@@ -264,7 +264,7 @@ def create_distribution_template():
             "taskTemplateId": "6506453281338818692",
             "taskTemplateName": "假呼叫测试副本副本",
             "taskNameDefModel": 3,
-            "custTaskNamePart": "分流模版测试"z``
+            "custTaskNamePart": "分流模版测试"
         }
     ],
     "autoSubpackage": 1,
