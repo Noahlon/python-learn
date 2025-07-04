@@ -5,7 +5,7 @@ import json
 
 # 公共参数
 common_params = {
-    "token": "bearer_b314c6e5-c1b7-48bb-8146-127bccce3830",
+    "token": "bearer_e8975124-4368-4ea4-a477-72110848e681",
     "url": "https://fat-bff-admin.hellobike.cn/general/bffGeneralReqLogin", 
     "planName": "测试重试上传名单功能离线下发",
     "tenantCode": 11626,
@@ -287,7 +287,7 @@ if __name__ == "__main__":
     # 创建分流模版
     create_distribution_template()  # 创建分流模版
     
-    是否测试主流程 = False
+    是否测试主流程 = True
     if 是否测试主流程:
         offline_distribution()  # 离线分流
         real_time_distribution()  # 实时分流

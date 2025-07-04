@@ -1,0 +1,3 @@
+/Users/noah/Desktop/code/python/python-learn/pythonmysqlpybind/build/CMakeFiles/handsome.dir
+/Users/noah/Desktop/code/python/python-learn/pythonmysqlpybind/build/CMakeFiles/edit_cache.dir
+/Users/noah/Desktop/code/python/python-learn/pythonmysqlpybind/build/CMakeFiles/rebuild_cache.dir
